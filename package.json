@@ -5,8 +5,7 @@
   "main": "src/index.html",
   "homepage": "https://charistheo.github.io/push-examples",
   "scripts": {
-    "deploy": "gh-pages --dist src/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "gh-pages --dist src/"
   },
   "repository": {
     "type": "git",

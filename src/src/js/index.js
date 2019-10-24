@@ -1,4 +1,6 @@
 const VAPID_PUBLIC_KEY = 'BCvnBFnsPt6MPzwX_LOgKqVFG5ToFJ5Yl0qDfwrT-_lqG0PqgwhFijMq_E-vgkkLli7RWHZCYxANy_l0oxz0Nzs';
+const API_URL = 'https://ecommerce-pwa.herokuapp.com';
+
 const snackBar = document.getElementById('snackbar');
 
 window.addEventListener('load', () => {
@@ -26,7 +28,7 @@ window.addEventListener('load', () => {
 window.wipeData = async () => {
     // * Removes user data from the database
     //  * Also removes the httpOnly cookie 
-    const response = await fetch(`/user/remove`, { method: 'GET' });
+    const response = await fetch(`${API_URL}/user/remove`, { method: 'GET' });
     if (response.status === 400) {
         showSnackBar("There was an error while deleting your data 😕. Please Try again.");
         return;
@@ -78,7 +80,7 @@ window.requestNotification = notificationType => {
         }
 
         try {
-            const response = await fetch(`/user/push/${notificationType}`, { method: 'GET' });
+            const response = await fetch(`${API_URL}/user/push/${notificationType}`, { method: 'GET' });
             if (response.status === 400) {
                 showSnackBar("Push subscription has been deleted or expired. Try requesting permission again.");
 
@@ -116,7 +118,7 @@ const subscribeToPushManager = async registration => {
     console.log('Sending subscription to the API...');
 
     try {
-        await fetch('/user/push-subscription/', {
+        await fetch(`${API_URL}/user/push-subscription/`, {
             method: 'POST',
             body: JSON.stringify(subscription),
             headers: {
