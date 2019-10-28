@@ -46,7 +46,11 @@ body.not-cool .not-cool-dialog {
     right: 0;
     z-index: 99;
 }
-#fork-me-banner:hover .octo-arm {
+#fork-me-banner > svg > path:not(:first-child) {
+    fill: var(--primary-color);
+}
+#fork-me-banner:hover .octo-arm,
+#fork-me-banner:focus .octo-arm {
     -webkit-animation: octocat-wave 560ms ease-in-out;
     animation: octocat-wave 560ms ease-in-out;
 }
