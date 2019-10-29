@@ -41,12 +41,12 @@ self.addEventListener('notificationclick', function(event) {
 
   switch (event.action) {
     case 'cool':
-      event.waitUntil(clients.openWindow(`/?push-notifications-are-cool=${true}`));
+      event.waitUntil(clients.openWindow(`/push-examples/?push-notifications-are-cool=${true}`));
 
     break;
     
     case 'not-cool':
-      event.waitUntil(clients.openWindow(`/?push-notifications-are-cool=${false}`));
+      event.waitUntil(clients.openWindow(`/push-examples/?push-notifications-are-cool=${false}`));
 
     break;
 
