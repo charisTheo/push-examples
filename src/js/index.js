@@ -5,7 +5,7 @@ const snackBar = document.getElementById('snackbar');
 
 window.addEventListener('load', () => {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./service-worker.js');
+        navigator.serviceWorker.register('./service-worker.js', { scope: '/push-examples' });
     }
     const queryString = document.location.search;
 
@@ -40,13 +40,9 @@ window.wipeData = async () => {
         cacheNames.map(cache => caches.delete(cache));
     });
 
-    // * unregister all service workers
-    const registrations = await navigator.serviceWorker.getRegistrations();
-    const registrationsPromises = registrations.map(registration => {
-        registration.unregister();
-    });
-
-    await Promise.all(registrationsPromises);
+    // * unregister service worker
+    const registration = await navigator.serviceWorker.getRegistration('/push-examples');
+    await registration.unregister();
 
     // ! Cannot revoke browser notification permissions yet. 
     // ! https://stackoverflow.com/questions/28478185/remove-html5-notification-permissions/
@@ -56,7 +52,7 @@ window.wipeData = async () => {
 
 // ! ask for permission only when the user clicks
 window.requestNotificationPermission = () => {
-    navigator.serviceWorker.getRegistration('/').then(registration => {
+    navigator.serviceWorker.getRegistration('/push-examples').then(registration => {
         registration.pushManager.permissionState({userVisibleOnly: true}).then(permission => {
             // Possible values are 'prompt', 'denied', or 'granted'
             if (permission === "prompt" || permission === "granted") {
@@ -67,10 +63,10 @@ window.requestNotificationPermission = () => {
 }
 
 window.requestNotification = notificationType => {
-    navigator.serviceWorker.getRegistration('/').then(async registration => {
+    navigator.serviceWorker.getRegistration('/push-examples').then(async registration => {
         if (!registration) {
             showSnackBar("Push subscription has been deleted or expired.");
-            registration = await navigator.serviceWorker.register('./service-worker.js');
+            registration = await navigator.serviceWorker.register('./service-worker.js', { scope: '/push-examples' });
             await subscribeToPushManager(registration);
         }
         const permission = await registration.pushManager.permissionState({userVisibleOnly: true});
