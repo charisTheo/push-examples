@@ -130,6 +130,14 @@ const subscribeToPushManager = async registration => {
     }
 }
 
+window.addEventListener('offline', function() {
+    showSnackBar('You are offline 📴');
+});
+
+window.addEventListener('online', function() {
+    showSnackBar('You are back online! 🎉');
+});
+
 var hideSnackBarTimeout;
 const showSnackBar = message => {
     if (hideSnackBarTimeout) {
