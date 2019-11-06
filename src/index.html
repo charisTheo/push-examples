@@ -47,6 +47,12 @@
       #snackbar.show {
         bottom: 30px;
       }
+      @media (max-width: 320px) {
+        #snackbar {
+          left: calc(50% - 150px);
+          width: 280px;
+        }
+      }
       @media (min-width: 767px) {
         #snackbar.show {
           bottom: 120px;
