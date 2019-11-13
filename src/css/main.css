@@ -2,6 +2,7 @@
 :root {
     --orange80: rgba(255, 99, 51, 0.8);
     --orange: #ff6333;
+    --yellow: #FFEB3B;
     --dark-orange: #ff3d00;
     --purple: #673ab7;
     --dark-purple: #4a1a9e;
@@ -13,7 +14,6 @@ body {
     position: relative;
     margin: 0;
     padding: 0;
-    font-family: 'Open Sans', sans-serif;
     color: white;
     text-align: center;
     background-image: url("./../img/floating-cogs.svg");
@@ -43,11 +43,18 @@ body.not-cool .not-cool-dialog {
 
 #fork-me-banner {
     position: absolute;
+    top: 0;
     right: 0;
-    z-index: 99;
+    z-index: 9;
+}
+#fork-me-banner,
+#fork-me-banner > svg {
+    width: 75px;
+    height: 75px;
+    box-sizing: border-box;
 }
 #fork-me-banner > svg > path:not(:first-child) {
-    fill: var(--primary-color);
+    fill: var(--purple);
 }
 #fork-me-banner:hover .octo-arm,
 #fork-me-banner:focus .octo-arm {
@@ -155,12 +162,36 @@ button {
     transition: all 0.35s;
     text-transform: capitalize;
 }
+a {
+    border-radius: 4px;
+    transition: all 0.35s;
+    border: none;
+    outline: none;
+}
+
+a:focus,
+button:focus {
+    border: 3px solid var(--yellow);
+}
+
+a:focus,
+a:hover,
+button:focus,
 button:hover {
+    outline: none;
     box-shadow: 0 0 15px var(--purple);
 }
+a:active,
 button:active {
+    outline: none;
     box-shadow: none;
     background-color: var(--dark-purple);
+}
+
+.unavailable-offline {
+    opacity: 0.7;
+    pointer-events: none;
+    cursor: not-allowed;
 }
 
 .request-button, 
@@ -200,4 +231,16 @@ footer span {
 span[class^="arrow"] {
     background-repeat: no-repeat no-repeat;
     background-position: center center;
+}
+
+@media all and (display-mode: browser) {
+    body {
+        font-family: 'Open Sans', sans-serif;
+    }
+}
+    /* * If launched in standalone mode use system fonts */
+@media all and (display-mode: standalone) {
+    body {
+        font-family: "system-ui", "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
 }

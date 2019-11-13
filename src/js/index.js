@@ -1,12 +1,18 @@
 const VAPID_PUBLIC_KEY = 'BCvnBFnsPt6MPzwX_LOgKqVFG5ToFJ5Yl0qDfwrT-_lqG0PqgwhFijMq_E-vgkkLli7RWHZCYxANy_l0oxz0Nzs';
 const API_URL = 'https://ecommerce-pwa.herokuapp.com';
+const SERVICE_WORKER_SCOPE = window.location.href.match('localhost') ? '/' : '/push-examples/';
 
 const snackBar = document.getElementById('snackbar');
 
 window.addEventListener('load', () => {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./service-worker.js', { scope: '/push-examples/' });
+        navigator.serviceWorker.register('./service-worker.js', { scope: SERVICE_WORKER_SCOPE });
     }
+
+    if (!navigator.onLine) {
+        handleOfflineEvent();
+    }
+
     const queryString = document.location.search;
 
     if (!!queryString) {
@@ -41,7 +47,7 @@ window.wipeData = async () => {
     });
 
     // * unregister service worker
-    const registration = await navigator.serviceWorker.getRegistration('/push-examples/');
+    const registration = await navigator.serviceWorker.getRegistration(SERVICE_WORKER_SCOPE);
     await registration.unregister();
 
     // ! Cannot revoke browser notification permissions yet. 
@@ -52,7 +58,7 @@ window.wipeData = async () => {
 
 // ! ask for permission only when the user clicks
 window.requestNotificationPermission = () => {
-    navigator.serviceWorker.getRegistration('/push-examples/').then(registration => {
+    navigator.serviceWorker.getRegistration(SERVICE_WORKER_SCOPE).then(registration => {
         registration.pushManager.permissionState({userVisibleOnly: true}).then(permission => {
             // Possible values are 'prompt', 'denied', or 'granted'
             if (permission === "prompt" || permission === "granted") {
@@ -63,10 +69,10 @@ window.requestNotificationPermission = () => {
 }
 
 window.requestNotification = notificationType => {
-    navigator.serviceWorker.getRegistration('/push-examples/').then(async registration => {
+    navigator.serviceWorker.getRegistration(SERVICE_WORKER_SCOPE).then(async registration => {
         if (!registration) {
             showSnackBar("Push subscription has been deleted or expired.");
-            registration = await navigator.serviceWorker.register('./service-worker.js', { scope: '/push-examples/' });
+            registration = await navigator.serviceWorker.register('./service-worker.js', { scope: SERVICE_WORKER_SCOPE });
             await subscribeToPushManager(registration);
         }
         const permission = await registration.pushManager.permissionState({userVisibleOnly: true});
@@ -130,12 +136,36 @@ const subscribeToPushManager = async registration => {
     }
 }
 
-window.addEventListener('offline', function() {
+const handleOfflineEvent = () => {
+    markOfflineUnavailableContent();
     showSnackBar('You are offline 📴');
+}
+
+const handleOnlineEvent = () => {
+    unmarkOfflineUnavailableContent();
+    showSnackBar('You are back online! 🎉');
+}
+
+const markOfflineUnavailableContent = () => {
+    const buttons = Array.prototype.slice.call(document.querySelectorAll('main button'))
+    buttons.map(button => {
+        button.classList.add('unavailable-offline');
+    });
+}
+
+const unmarkOfflineUnavailableContent = () => {
+    const buttons = Array.prototype.slice.call(document.querySelectorAll('main button'))
+    buttons.map(button => {
+        button.classList.remove('unavailable-offline');
+    });
+}
+
+window.addEventListener('offline', function() {
+    handleOfflineEvent();
 });
 
 window.addEventListener('online', function() {
-    showSnackBar('You are back online! 🎉');
+    handleOnlineEvent();
 });
 
 var hideSnackBarTimeout;

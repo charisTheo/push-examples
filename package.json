@@ -5,6 +5,8 @@
   "main": "src/index.html",
   "homepage": "https://charistheo.github.io/push-examples",
   "scripts": {
+    "start": "cd src && python -m SimpleHTTPServer",
+    "dev": "cd src && DEV=1 python -m SimpleHTTPServer",
     "deploy": "gh-pages --dist src/"
   },
   "repository": {

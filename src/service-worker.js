@@ -7,10 +7,30 @@ if (workbox) {
   console.log(`Boo! Workbox didn't load 😬`);
 }
 
-workbox.precaching.precacheAndRoute(['index.html']);
+addEventListener('activate', event => {
+  event.waitUntil(clients.claim());
+  skipWaiting();
+});
 
 workbox.routing.registerRoute(
-  /\.(?:html|js|css|webp|png|svg|ico)$/,
+  /(service-worker\.js)$/,
+  new workbox.strategies.NetworkOnly()
+);
+
+workbox.precaching.precacheAndRoute(['/', 'index.html', 'js/index.js', 'manifest.json', 'css/main.css', 'favicon/favicon.ico']);
+
+workbox.routing.registerRoute(
+  /(https:\/\/fonts.googleapis.com)/,
+  new workbox.strategies.StaleWhileRevalidate()
+);
+
+workbox.routing.registerRoute(
+  /(https:\/\/fonts.gstatic.com)/,
+  new workbox.strategies.StaleWhileRevalidate()
+);
+
+workbox.routing.registerRoute(
+  /\.(?:js|css|png|gif|jpg|svg|jpeg|webp)$/,
   new workbox.strategies.StaleWhileRevalidate()
 );
 
