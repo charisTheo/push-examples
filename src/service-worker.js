@@ -17,7 +17,7 @@ workbox.routing.registerRoute(
   new workbox.strategies.NetworkOnly()
 );
 
-workbox.precaching.precacheAndRoute(['/', 'index.html', 'js/index.js', 'manifest.json', 'css/main.css', 'favicon/favicon.ico']);
+workbox.precaching.precacheAndRoute(['index.html', 'js/index.js', 'manifest.json', 'css/main.css', 'favicon/favicon.ico'], 'GET');
 
 workbox.routing.registerRoute(
   /(https:\/\/fonts.googleapis.com)/,
@@ -31,7 +31,7 @@ workbox.routing.registerRoute(
 
 workbox.routing.registerRoute(
   /\.(?:js|css|png|gif|jpg|svg|jpeg|webp)$/,
-  new workbox.strategies.StaleWhileRevalidate()
+  new workbox.strategies.CacheFirst()
 );
 
 self.addEventListener('push', function(event) {
